@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Web3Modal } from "./wc-config";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {/* <MetaMaskProvider
+          debug={false}
+          sdkOptions={{
+            dappMetadata: {
+              name: "Example Dapp",
+              url: window.location.href,
+            },
+            infuraAPIKey: "a2caa3769e994461a7ef596008041a8b",
+            // Other options.
+          }}
+        > */}
+        <Web3Modal>
+          {children}
+          </Web3Modal>
+        {/* </MetaMaskProvider> */}
+      </body>
     </html>
   );
 }

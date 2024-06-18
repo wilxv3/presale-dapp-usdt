@@ -15,10 +15,17 @@ import { USDT_abi, USDT_contract } from "./usdt_contract";
 import logo from "@/public/logo.png";
 import gift from "@/public/gift.png";
 import bg from "@/public/bg.jpg";
+import tether from "@/public/tether.png";
 import { bscMainnet } from "./wc-config";
+
+const pkg = {
+  total: 5000,
+  price: 3,
+};
 
 export default function Home() {
   const [error, setError] = useState<string | null>(null);
+  const [availablePackages, setAvailablePackages] = useState(0);
   const [countdown, setCountdown] = useState<string>("");
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
@@ -42,9 +49,9 @@ export default function Home() {
     };
 
     const interval = setInterval(updateCountdown, 1000);
-
+    if(walletProvider) setPackagesLeft();
     return () => clearInterval(interval);
-  }, []);
+  }, [walletProvider]);
 
   const approveToken = async () => {
     const ethersProvider = new BrowserProvider(walletProvider!);
@@ -52,7 +59,7 @@ export default function Home() {
     const usdt_contract = new Contract(USDT_contract, USDT_abi, signer);
     const approve_tx = await usdt_contract.approve(
       presale_contract,
-      ethers.parseUnits("3", 18)
+      ethers.parseUnits(pkg.price.toString(), 18)
     );
     await approve_tx.wait();
   };
@@ -63,6 +70,20 @@ export default function Home() {
     const contract = new Contract(presale_contract, abi, signer);
     const tx = await contract.buyWithUsdt();
     await tx.wait();
+  };
+
+  const setPackagesLeft = async () => {
+    try {
+      const ethersProvider = new BrowserProvider(walletProvider!);
+      const signer = await ethersProvider.getSigner();
+      const contract = new Contract(presale_contract, abi, signer);
+      const soldPackages = await contract.getSold();
+      const availPackages = pkg.total - Number(soldPackages);
+      setAvailablePackages(availPackages);
+    } catch (error) {
+      console.error("Error fetching sold packages:", error);
+      setError("Error fetching sold packages");
+    }
   };
 
   const addToken = async (name: string) => {
@@ -111,8 +132,8 @@ export default function Home() {
     >
       <div className="flex flex-col items-center justify-center bg-black bg-opacity-50 min-h-screen">
         <div className="w-full text-center text-white py-4 bg-gradient-to-r from-purple-500 to-blue-500">
-          <h1 className="text-2xl font-serif font-bold">
-            Countdown Gift Premium Time: {countdown}
+          <h1 className="text-lg md:text-xl lg:text-2xl font-serif font-bold">
+            Countdown PRE-LIST Adamas: {countdown}
           </h1>
         </div>
         <div className="flex flex-col justify-center items-center space-y-6 py-8">
@@ -130,9 +151,11 @@ export default function Home() {
                 Adamas Project
               </h1>
               <h2 className="text-xl font-serif">Pre-listed</h2>
-              <p className="pb-2 font-serif">Velor: 1 USDT</p>
+              <p className="pb-2 font-serif">Price: {pkg.price} USDT</p>
               <hr className="w-full border-gray-500 pb-3" />
-              <p className="font-serif">TICKETS GENERAL: 5000</p>
+              <p className="font-serif">
+                TICKETS: {availablePackages}
+              </p>
               <p className="pb-2 font-serif">You will receive 1000 AST</p>
               <button
                 className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 font-serif"
@@ -148,7 +171,7 @@ export default function Home() {
               >
                 PRE-LIST NOW
               </button>
-              <Image src={gift} alt="Gift Logo" width={200} height={200} />
+              <Image src={tether} alt="tether" width={150} height={150} />
               <div className="flex space-x-4">
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 font-serif"

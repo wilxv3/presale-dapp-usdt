@@ -34,7 +34,7 @@ export const bscMainnet = {
 const metadata = {
   name: 'My Website',
   description: 'My Website description',
-  url: process.env.ORIGIN!, // origin must match your domain & subdomain
+  url: 'https://prelisted.adamasproject.com', // origin must match your domain & subdomain
   icons: ['https://avatars.mywebsite.com/']
 }
 // 4. Create Ethers config

@@ -12,10 +12,10 @@ import {
   useWeb3ModalProvider,
 } from "@web3modal/ethers/react";
 import { USDT_abi, USDT_contract } from "./usdt_contract";
-import logo from "@/public/logo.png";
-import gift from "@/public/gift.png";
+// import logo from "@/public/logo.png";
+// import gift from "@/public/gift.png";
 import bg from "@/public/bg.jpg";
-import tether from "@/public/tether.png";
+// import tether from "@/public/tether.png";
 import { bscMainnet } from "./wc-config";
 
 const pkg = {
@@ -49,7 +49,7 @@ export default function Home() {
     };
 
     const interval = setInterval(updateCountdown, 1000);
-    if(walletProvider) setPackagesLeft();
+    if (walletProvider) setPackagesLeft();
     return () => clearInterval(interval);
   }, [walletProvider]);
 
@@ -146,16 +146,19 @@ export default function Home() {
               Add USDT
             </button>
             <div className="flex flex-col items-center space-y-3">
-              <Image src={logo} alt="Project Logo" width={120} height={120} />
+              {/* <Image src={logo} alt="Project Logo" width={120} height={120} />
+               */}
+              <img
+                style={{ maxWidth: "120px", width: "100%" }}
+                src="/logo.png"
+              />
               <h1 className="text-3xl font-serif font-bold pb-2">
                 Adamas Project
               </h1>
               <h2 className="text-xl font-serif">Pre-listed</h2>
               <p className="pb-2 font-serif">Price: {pkg.price} USDT</p>
               <hr className="w-full border-gray-500 pb-3" />
-              <p className="font-serif">
-                TICKETS: {availablePackages}
-              </p>
+              <p className="font-serif">TICKETS: {walletProvider?availablePackages:'-'}</p>
               <p className="pb-2 font-serif">You will receive 1000 AST</p>
               <button
                 className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 font-serif"
@@ -171,7 +174,11 @@ export default function Home() {
               >
                 PRE-LIST NOW
               </button>
-              <Image src={tether} alt="tether" width={150} height={150} />
+              {/* <Image src={tether} alt="tether" width={150} height={150} /> */}
+              <img
+                style={{ maxWidth: "150px", width: "100%" }}
+                src="/tether.png"
+              />
               <div className="flex space-x-4">
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 font-serif"
